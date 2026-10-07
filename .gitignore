@@ -1,0 +1,17 @@
+#Stuffs that you MUST NEVER share or push cause it will compromise the WHOLE account. You are paying for it after all.
+.env
+*.env
+!.env.example
+
+
+#The images you're using, cause after they've been filtered they will be next to the important folders.
+images/
+*.jpg
+*.jpeg
+*.png
+*.webp
+
+
+#Python stuffs like storages and resources that work with sensible contents.
+.venv/
+venv/
