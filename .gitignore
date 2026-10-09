@@ -3,7 +3,6 @@
 *.env
 .env.example
 
-
 #The images you're using, cause after they've been filtered they will be next to the important folders.
 images/
 *.jpg
@@ -15,3 +14,5 @@ images/
 #Python stuffs like storages and resources that work with sensible contents.
 .venv/
 venv/
+.cache
+.cache-*
