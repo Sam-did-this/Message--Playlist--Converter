@@ -17,12 +17,12 @@ sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
 spotify_user_id = os.getenv("SPOTIFY_USER_ID")
 
 # Step 1: Create the playlist
-playlist = sp.user_playlist_create(
-    user=spotify_user_id,
+playlist = sp.current_user_playlist_create(
     name="Title",
     public=True,
-    description="This is a test. I'm not going to risk any crashes for song. Fuck my life."
+    description="Message text here"
 )
+
 playlist_id = playlist['id']
 print(f"Created playlist: {playlist_id}")
 
