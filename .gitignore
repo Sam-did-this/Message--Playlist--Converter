@@ -16,6 +16,8 @@ images/
 venv/
 .cache
 .cache-*
+__pycache__/
+used_images.json
 
 #Testing-stuffs
 
