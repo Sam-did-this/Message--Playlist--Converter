@@ -23,6 +23,14 @@ USER_ID = os.getenv("SPOTIFY_USER_ID")
 # The OAuth scopes needed: upload cover images, modify public/private playlists
 SCOPES = "ugc-image-upload playlist-modify-public playlist-modify-private"
 
+
+# --- Network behaviour ---
+REQUEST_TIMEOUT = 30            # seconds per API call (Spotipy default is 5)
+MAX_RETRIES = 4                 # attempts per upload before giving up
+DELAY_BETWEEN_PLAYLISTS = 2     # seconds to pause between playlists
+COVER_MAX_BYTES = 250 * 1024    # Spotify's limit is 256 KB of base64 
+
+
 #--- Test mode: You just have 2 playlists in this space, be aware ---
 TEST_PLAYLIST_IDS = [
     "77iz4gOZfss5yfeNJzDejp",
