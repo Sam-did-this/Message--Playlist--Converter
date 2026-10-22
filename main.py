@@ -21,6 +21,9 @@ import spotipy
 from PIL import Image
 from spotipy.oauth2 import SpotifyOAuth
 
+import zipfile
+import xml.etree.ElementTree as ET
+
 from config import (
     IMAGES_FOLDER, CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, SCOPES,
     TEST_PLAYLIST_IDS, TITLE_MAX, REQUEST_TIMEOUT, MAX_RETRIES,
@@ -46,13 +49,63 @@ def get_client():
     )
 
 
-def read_message(path):
-    """Read from a file (reliable for long text) or from stdin until Ctrl+D."""
-    if path:
-        return Path(path).read_text(encoding="utf-8").strip()
-    print("Paste your message, then press Enter and Ctrl+D:")
-    return sys.stdin.read().strip()
+W_NS = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
+T_NS = "{urn:oasis:names:tc:opendocument:xmlns:text:1.0}"
 
+
+def _read_docx(path):
+    with zipfile.ZipFile(path) as z:
+        root = ET.fromstring(z.read("word/document.xml"))
+    paragraphs = []
+    for p in root.iter(W_NS + "p"):
+        parts = []
+        for el in p.iter():
+            if el.tag == W_NS + "t":
+                parts.append(el.text or "")
+            elif el.tag in (W_NS + "tab", W_NS + "br"):
+                parts.append(" ")
+        paragraphs.append("".join(parts))
+    return "\n".join(paragraphs)
+
+
+def _odf_text(elem):
+    parts = [elem.text or ""]
+    for child in elem:
+        if child.tag == T_NS + "s":
+            parts.append(" " * int(child.get(T_NS + "c", "1")))
+        elif child.tag in (T_NS + "tab", T_NS + "line-break"):
+            parts.append(" ")
+        else:
+            parts.append(_odf_text(child))
+        parts.append(child.tail or "")
+    return "".join(parts)
+
+
+def _read_odt(path):
+    with zipfile.ZipFile(path) as z:
+        root = ET.fromstring(z.read("content.xml"))
+    return "\n".join(
+        _odf_text(el) for el in root.iter()
+        if el.tag in (T_NS + "p", T_NS + "h")
+    )
+
+def read_message(path):
+    """Read .docx, .odt or plain text from a file, or stdin if no path."""
+    if not path:
+        print("Paste your message, then press Enter and Ctrl+D:")
+        return sys.stdin.read().strip()
+
+    p = Path(path)
+    suffix = p.suffix.lower()
+    if suffix == ".docx":
+        text = _read_docx(p)
+    elif suffix == ".odt":
+        text = _read_odt(p)
+    elif suffix == ".doc":
+        raise SystemExit("Old .doc files aren't supported. Save it as .docx or .odt.")
+    else:
+        text = p.read_text(encoding="utf-8")
+    return text.strip()
 
 def encode_image(image_path):
     """Return a base64 JPEG under Spotify's size limit, shrinking if needed."""
