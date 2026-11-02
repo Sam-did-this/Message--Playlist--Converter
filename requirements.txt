@@ -1,13 +1,6 @@
-certifi==2026.10.23
-charset-normalizer==3.5.2
-idna==3.20
-ImageHash==4.3.2
-numpy==2.5.4
-pillow==13.0.0
-python-dotenv==1.2.4
-PyWavelets==1.10.0
-redis==8.1.0
-requests==2.34.2
-scipy==1.18.1
-spotipy==2.26.0
-urllib3==2.8.0
+spotipy
+Pillow
+ImageHash
+python-dotenv
+requests
+#There can be more if you want to try GIF, they are possible but the person who's reading the messages need to use the web version to see them.

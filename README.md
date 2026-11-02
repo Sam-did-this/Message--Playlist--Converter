@@ -13,8 +13,6 @@ Built in Python with the Spotify Web API. It started as a personal project for s
 
 Example: a 1,500 character message becomes 3 playlists, so it needs 3 unused images.
 
-#REMEMBER TO CREATE THE GIF FOR THE DEMONSTRATION
-
 ## Features
 
 - **Input formats:** plain text, `.docx`, `.odt`, or stdin.
