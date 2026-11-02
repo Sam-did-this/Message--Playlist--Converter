@@ -1,0 +1,6 @@
+spotipy
+Pillow
+ImageHash
+python-dotenv
+requests
+#There can be more if you want to try GIF, they are possible but the person who's reading the messages need to use the web version to see them.
